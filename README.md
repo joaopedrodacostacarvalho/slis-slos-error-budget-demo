@@ -21,3 +21,43 @@ O objetivo dessa *demo* é mostra como uma equipe de SRE (Site Reliability Engin
 - [Limitações e trade-offs](#limitações-e-trade-offs)
 - [Solução de problemas](#solução-de-problemas)
 - [Referências](#referências)
+
+## Arquitetura
+
+```text
+         tráfego de teste (curl loop)
+                    │
+                    ▼
+          ┌───────────────────┐
+          │   checkout :5000  │  ← serviço cujo SLI é medido
+          └─────────┬─────────┘
+                    │ HTTP
+                    ▼
+          ┌───────────────────┐
+          │ chaos-proxy :8080 │  ← injeta 30% de erro 503 quando ativado
+          └─────────┬─────────┘
+                    │ HTTP (quando não injeta caos)
+                    ▼
+          ┌───────────────────┐
+          │   shipping :5001  │  ← dependência instável
+          └───────────────────┘
+
+  Telemetria (OTLP gRPC :4317)
+     checkout ─────┐
+                   ▼
+        ┌─────────────────────────┐
+        │   otel-collector :8889  │─── métricas ───┐
+        └────────────┬────────────┘                │
+                     │                             ▼
+                     │ traces              ┌──────────────────┐
+                     ▼                     │ prometheus :9090 │── alertas ──┐
+              ┌───────────────┐            └──────────────────┘              │
+              │ jaeger :16686 │                     ▲                        ▼
+              └───────────────┘                     │ regras SLO    ┌──────────────────┐
+                                                    │ (geradas      │ alertmanager     │
+                                                    │  pelo Sloth)  │ :9093            │
+                                                    │               └──────────────────┘
+                                                    │
+                                              ┌──────────────┐
+                                              │ grafana :3000│
+                                              └──────────────┘

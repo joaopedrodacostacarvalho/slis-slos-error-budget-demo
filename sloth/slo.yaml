@@ -9,9 +9,9 @@ slos:
     sli:
       events:
         error_query: |
-          sum(rate(http_requests_total{service="checkout",status_code=~"5.."}[{{.window}}]))
+          sum(rate(http_requests_total{service="checkout",status_code=~"5.."}[{{.window}}])) or vector(0)
         total_query: |
-          sum(rate(http_requests_total{service="checkout"}[{{.window}}]))
+          sum(rate(http_requests_total{service="checkout"}[{{.window}}])) or vector(0)
     alerting:
       name: "CheckoutAvailabilityBurnRate"
       labels:

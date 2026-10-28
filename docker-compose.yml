@@ -61,8 +61,7 @@ services:
     depends_on:
       - otel-collector
       - alertmanager
-      - sloth-generate:
-          condition: service_completed_successfully
+      - sloth-generate
 
   alertmanager:
     image: prom/alertmanager:v0.26.0

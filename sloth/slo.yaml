@@ -1,0 +1,24 @@
+version: "prometheus/v1"
+service: "checkout"
+labels:
+  team: "sre-demo"
+slos:
+  - name: "checkout-availability"
+    objective: 99.5
+    description: "99.5% das requisições de checkout devem ser bem-sucedidas em 30 dias"
+    sli:
+      events:
+        error_query: |
+          sum(rate(http_requests_total{service="checkout",status_code=~"5.."}[{{.window}}]))
+        total_query: |
+          sum(rate(http_requests_total{service="checkout"}[{{.window}}]))
+    alerting:
+      name: "CheckoutAvailabilityBurnRate"
+      labels:
+        severity: "critical"
+      page_alert:
+        labels:
+          severity: "critical"
+      ticket_alert:
+        labels:
+          severity: "warning"

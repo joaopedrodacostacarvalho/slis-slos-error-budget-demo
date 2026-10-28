@@ -11,7 +11,7 @@ slos:
         error_query: |
           sum(rate(http_requests_total{service="checkout",status_code=~"5.."}[{{.window}}])) or vector(0)
         total_query: |
-          sum(rate(http_requests_total{service="checkout"}[{{.window}}])) or vector(0)
+          sum(rate(http_requests_total{service="checkout"}[{{.window}}])) or vector(1e-9)
     alerting:
       name: "CheckoutAvailabilityBurnRate"
       labels:

@@ -61,3 +61,27 @@ O objetivo dessa *demo* é mostra como uma equipe de SRE (Site Reliability Engin
                                               ┌──────────────┐
                                               │ grafana :3000│
                                               └──────────────┘
+```
+
+**Serviços (mínimo exigido: 2 se comunicando pela rede):**
+
+| Serviço        | Porta  | Papel |
+|----------------|--------|-------|
+| `checkout`     | 5000   | Serviço medido pelo SLO; chama o `shipping` via proxy |
+| `shipping`     | 5001   | Dependência do `checkout` |
+| `chaos-proxy`  | 8080   | Injeção de falha controlada entre `checkout` e `shipping` |
+| `otel-collector` | 4317, 8889 | Recebe OTLP e expõe métricas para o Prometheus; encaminha traces ao Jaeger |
+| `prometheus`   | 9090   | Armazena métricas e avalia as regras de SLO |
+| `alertmanager` | 9093   | Recebe alertas de burn rate |
+| `grafana`      | 3000   | Dashboard de error budget e burn rate |
+| `jaeger`       | 16686  | UI de traces distribuídos |
+
+## Pré-requisitos
+
+- **Docker** ≥ 20.10
+- **Docker Compose** ≥ 2.0 (plugin `docker compose`, não o antigo `docker-compose`)
+- **make** (opcional, mas recomendado, há também um `demo.sh` equivalente)
+- ~2 GB de RAM livres
+- Portas livres: `3000, 4317, 5000, 5001, 8080, 8889, 9090, 9093, 16686`
+
+Nenhuma conta em nuvem é necessária. Tudo roda localmente.

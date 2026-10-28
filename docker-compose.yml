@@ -44,6 +44,13 @@ services:
       - "16686:16686"
       - "14250:14250"
 
+  sloth-generate:
+    image: slok/sloth:latest
+    volumes:
+      - ./sloth/slo.yaml:/slo.yaml
+      - ./prometheus/rules:/output
+    command: ["generate", "-i", "/slo.yaml", "-o", "/output/slo-rules.yaml"]
+
   prometheus:
     image: prom/prometheus:v2.50.1
     volumes:
@@ -54,6 +61,8 @@ services:
     depends_on:
       - otel-collector
       - alertmanager
+      - sloth-generate:
+          condition: service_completed_successfully
 
   alertmanager:
     image: prom/alertmanager:v0.26.0

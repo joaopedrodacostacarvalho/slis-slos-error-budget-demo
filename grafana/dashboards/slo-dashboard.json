@@ -1,0 +1,77 @@
+{
+  "title": "SLO - Checkout Availability",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Error Budget Remaining (%)",
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "100 * slo:period_error_budget_remaining:ratio{sloth_service=\"checkout\"}",
+          "legendFormat": "Budget remaining"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 20 },
+              { "color": "green", "value": 50 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "Burn Rate (current, 5m window)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "expr": "slo:current_burn_rate:ratio{sloth_service=\"checkout\", sloth_window=\"5m\"}",
+          "legendFormat": "burn rate (5m)"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "thresholdsStyle": { "mode": "line" }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "red", "value": 14.4 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "SLI error ratio (multi-window)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        { "expr": "slo:sli_error:ratio_rate5m{sloth_service=\"checkout\"}",  "legendFormat": "5m" },
+        { "expr": "slo:sli_error:ratio_rate1h{sloth_service=\"checkout\"}",  "legendFormat": "1h" },
+        { "expr": "slo:sli_error:ratio_rate6h{sloth_service=\"checkout\"}",  "legendFormat": "6h" },
+        { "expr": "slo:sli_error:ratio_rate1d{sloth_service=\"checkout\"}",  "legendFormat": "1d" }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "percentunit" }
+      }
+    }
+  ],
+  "schemaVersion": 38,
+  "version": 1
+}

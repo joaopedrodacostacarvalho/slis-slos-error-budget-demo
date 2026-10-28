@@ -1,13 +1,26 @@
 {
   "title": "SLO - Checkout Availability",
+  "uid": "slo-checkout",
+  "timezone": "browser",
+  "editable": true,
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "refresh": "10s",
+  "schemaVersion": 38,
+  "version": 1,
   "panels": [
     {
       "id": 1,
       "title": "Error Budget Remaining (%)",
       "type": "gauge",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
       "targets": [
         {
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
           "expr": "100 * slo:period_error_budget_remaining:ratio{sloth_service=\"checkout\"}",
           "legendFormat": "Budget remaining"
         }
@@ -25,16 +38,29 @@
               { "color": "green", "value": 50 }
             ]
           }
-        }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "values": false,
+          "calcs": ["lastNotNull"],
+          "fields": ""
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
       }
     },
     {
       "id": 2,
       "title": "Burn Rate (current, 5m window)",
       "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
       "targets": [
         {
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
           "expr": "slo:current_burn_rate:ratio{sloth_service=\"checkout\", sloth_window=\"5m\"}",
           "legendFormat": "burn rate (5m)"
         }
@@ -43,6 +69,11 @@
         "defaults": {
           "unit": "short",
           "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "showPoints": "auto",
+            "lineWidth": 2,
+            "fillOpacity": 10,
             "thresholdsStyle": { "mode": "line" }
           },
           "thresholds": {
@@ -53,6 +84,18 @@
               { "color": "red", "value": 14.4 }
             ]
           }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
         }
       }
     },
@@ -60,18 +103,58 @@
       "id": 3,
       "title": "SLI error ratio (multi-window)",
       "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
       "targets": [
-        { "expr": "slo:sli_error:ratio_rate5m{sloth_service=\"checkout\"}",  "legendFormat": "5m" },
-        { "expr": "slo:sli_error:ratio_rate1h{sloth_service=\"checkout\"}",  "legendFormat": "1h" },
-        { "expr": "slo:sli_error:ratio_rate6h{sloth_service=\"checkout\"}",  "legendFormat": "6h" },
-        { "expr": "slo:sli_error:ratio_rate1d{sloth_service=\"checkout\"}",  "legendFormat": "1d" }
+        {
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "slo:sli_error:ratio_rate5m{sloth_service=\"checkout\"}",
+          "legendFormat": "5m"
+        },
+        {
+          "refId": "B",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "slo:sli_error:ratio_rate1h{sloth_service=\"checkout\"}",
+          "legendFormat": "1h"
+        },
+        {
+          "refId": "C",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "slo:sli_error:ratio_rate6h{sloth_service=\"checkout\"}",
+          "legendFormat": "6h"
+        },
+        {
+          "refId": "D",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "slo:sli_error:ratio_rate1d{sloth_service=\"checkout\"}",
+          "legendFormat": "1d"
+        }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "percentunit" }
+        "defaults": {
+          "unit": "percentunit",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "showPoints": "auto",
+            "lineWidth": 2,
+            "fillOpacity": 10
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
       }
     }
-  ],
-  "schemaVersion": 38,
-  "version": 1
+  ]
 }

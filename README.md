@@ -160,7 +160,7 @@ Abra o Grafana em http://localhost:3000 (login `admin`/`admin`, ou *skip* na pri
 Ative o caos no proxy:
 
 ```bash
-curl "http://localhost:8080/chaos/on?rate=1.0"
+curl "http://localhost:8080/chaos/on?rate=0.3"
 ```
 
 > **Nota importante sobre a taxa:** o Sloth usa janelas longas (1h, 5m) para o

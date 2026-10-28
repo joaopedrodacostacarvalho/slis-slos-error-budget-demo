@@ -1,0 +1,115 @@
+# Python 
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Ambientes virtuais
+.venv/
+venv/
+ENV/
+env/
+.python-version
+
+# Testes e cobertura
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+
+# Arquivos gerados pelo Sloth 
+# As regras de SLO são geradas por `make generate-rules` a partir de
+# sloth/slo.yaml. Não versionar o output evita drift entre o YAML
+# declarativo e as regras Prometheus.
+prometheus/rules/
+prometheus/rules/*.yaml
+
+# Dados persistidos pelos serviços 
+# Volumes locais, caso alguém mapeie dados do Prometheus, Grafana,
+# Jaeger ou Alertmanager para o host durante experimentos.
+data/
+prometheus/data/
+grafana/data/
+alertmanager/data/
+jaeger/data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs 
+*.log
+logs/
+*.out
+
+# Arquivos de ambiente e segredos 
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+credentials.json
+grafana/admin_password.txt
+
+# Docker 
+# portas remapeadas, senhas de dev
+docker-compose.override.yml
+docker-compose.*.local.yml
+.docker/
+
+# Editores e IDEs 
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.iml
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# Sistema operacional 
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Gravações de tela da demo (plano B) 
+recordings/
+*.mp4
+*.mov
+*.mkv
+*.webm
+
+# Arquivos temporários da demo 
+tmp/
+temp/
+*.tmp
+*.bak
+*.orig
+*.rej
